@@ -1,0 +1,22 @@
+docker run -d \
+  --memory 3gb \
+  --net host \
+  -v /etc/localtime:/etc/localtime:ro \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -e DISPLAY=unix$DISPLAY \
+  -v /dev/shm:/dev/shm \
+  -v /etc/hosts:/etc/hosts \
+  -v /tmp/chrome-sandbox/Downloads:/root/Downloads \
+  -v /tmp/chrome-sandbox/Pictures:/root/Pictures \
+  -v /tmp/chrome-sandbox/Torrents:/root/Torrents \
+  -v /tmp/chrome-sandbox/.chrome:/data \
+  --security-opt seccomp:/etc/docker/seccomp/chrome.json \
+  --device /dev/snd \
+  --device /dev/dri \
+  --device /dev/bus/usb \
+  --group-add audio \
+  --group-add video \
+  --name chrome \
+  jess/chrome --user-data-dir=/data \
+  --proxy-server="$proxy" \
+  --host-resolver-rules="$map" "$args"
