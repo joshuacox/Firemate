@@ -101,21 +101,21 @@ builddocker:
 	/usr/bin/time -v docker build -t `cat TAG` .
 
 kill:
-	-@docker kill `cat chromeCID`
+	-@docker kill `cat paraviewCID`
 
 rm-image:
-	-@docker rm `cat chromeCID`
-	-@rm chromeCID
+	-@docker rm `cat paraviewCID`
+	-@rm paraviewCID
 
 rm: kill rm-image
 
 clean: rm
 
 enter:
-	docker exec -i -t `cat chromeCID` /bin/bash
+	docker exec -i -t `cat paraviewCID` /bin/bash
 
 logs:
-	docker logs -f `cat chromeCID`
+	docker logs -f `cat paraviewCID`
 
 # temp stuff
 tempkill:
