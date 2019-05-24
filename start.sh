@@ -2,7 +2,7 @@
 
 MYCWD=$(pwd)
 TZ=${TZ:-America/Chicago}
-export FIREFOX_BIN=firefox
+export FIREFOX_BIN=/home/firefox/firefox/firefox
 
 cd $MYCWD
 
