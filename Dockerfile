@@ -1,5 +1,9 @@
 FROM debian:sid-slim
 
+ENV LANG en-US
+ENV NICENESS 19
+ENV LINKS http://foundation.webhosting.coop
+
 RUN apt-get update && apt-get install -y \
 	dirmngr \
 	gnupg \
@@ -11,6 +15,8 @@ RUN apt-get update && apt-get install -y \
 	ca-certificates \
 	ffmpeg \
 	firefox \
+        bzip2 \
+        curl \
 	hicolor-icon-theme \
 	libasound2 \
 	libgl1-mesa-dri \
@@ -22,16 +28,19 @@ RUN apt-get update && apt-get install -y \
 	--no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV LANG en-US
-
 COPY local.conf /etc/fonts/local.conf
 
 RUN echo 'pref("browser.tabs.remote.autostart", false);' >> /etc/firefox/syspref.js
 
 LABEL maintainer "Josh Cox <josh@webhosting.coop>"
 
-ENV NICENESS 19
-ENV LINKS http://foundation.webhosting.coop
+RUN useradd firefox \
+  && mkdir -p /home/firefox \
+  && chown firefox. /home/firefox \
+  && chmod 700 firefox. /home/firefox
+USER firefox
+WORKDIR /home/firefox
+RUN curl https://ftp.mozilla.org/pub/firefox/releases/21.0/linux-x86_64/en-US/firefox-21.0.tar.bz2 | tar jxvfp -
 
 COPY start.sh /start.sh
 ENTRYPOINT [ "/start.sh" ]
