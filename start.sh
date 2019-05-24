@@ -2,9 +2,11 @@
 
 MYCWD=$(pwd)
 TZ=${TZ:-America/Chicago}
-export FIREFOX_BIN=/home/firefox/firefox/firefox
+#export FIREFOX_BIN=/home/firefox/firefox/firefox
+export FIREFOX_BIN=./firefox
 
 cd $MYCWD
+ls -alh
 
 if [ -s /LINK ]; then
   nice -n $NICENESS $FIREFOX_BIN \

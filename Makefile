@@ -27,12 +27,12 @@ rundocker: TAG NAME HOMEDIR NICENESS LINK
 	$(eval NICENESS := $(shell cat NICENESS))
 	$(eval PROXY := $(shell cat PROXY))
 	xhost +
-	mkdir -p "${HOME}/.firefox/cache"
-	mkdir -p "${HOME}/.firefox/mozilla"
-	mkdir -p "${HOME}/Downloads"
-	mkdir -p "${HOME}/Pictures"
-	mkdir -p "${HOME}/Torrents"
-	mkdir -p $(HOME)/tmp
+	sudo mkdir -p "${HOME}/.firefox/cache"
+	sudo mkdir -p "${HOME}/.firefox/mozilla"
+	sudo mkdir -p "${HOME}/Downloads"
+	sudo mkdir -p "${HOME}/Pictures"
+	sudo mkdir -p "${HOME}/Torrents"
+	sudo mkdir -p $(HOME)/tmp
 	sudo chown -R 999:999 $(HOME)
 	sudo chown -R 999:999 $(TMP)
 	sudo chmod -R 770 $(HOME)
@@ -55,7 +55,7 @@ rundocker: TAG NAME HOMEDIR NICENESS LINK
 	--device /dev/snd \
 	--device /dev/dri \
 	--name firefox \
-	jess/firefox "$@"
+	${TAG} "$@"
 
 tempdocker: TAG NAME
 	$(eval TMP := $(shell mktemp -d --suffix=tempchromeTMP))
@@ -63,17 +63,9 @@ tempdocker: TAG NAME
 	$(eval TAG := $(shell cat TAG))
 	$(eval PROXY := $(shell cat PROXY))
 	$(eval NICENESS := $(shell cat NICENESS))
-	mkdir -p $(TMP)/chrome-sandbox/Downloads
-	mkdir -p $(TMP)/chrome-sandbox/Pictures
-	mkdir -p $(TMP)/chrome-sandbox/Torrents
-	mkdir -p $(TMP)/chrome-sandbox/.chrome
-	mkdir -p $(TMP)/tmp
 	xhost +
-	sudo chmod -R 770 $(TMP)
-	sudo chown -R 999:999 $(TMP)
 	@docker run -d --name=$(NAME)-temp \
 	--cidfile="tempCID" \
-	-v $(TMP)/tmp:/tmp \
 	--memory 3gb \
 	--cpus 1 \
 	--net host \
@@ -83,11 +75,6 @@ tempdocker: TAG NAME
 	-e NICENESS=$(NICENESS) \
 	-v /dev/shm:/dev/shm \
 	-v /etc/hosts:/etc/hosts \
-	-v $(TMP)/chrome-sandbox/Downloads:/root/Downloads \
-	-v $(TMP)/chrome-sandbox/Pictures:/root/Pictures \
-	-v $(TMP)/chrome-sandbox/Torrents:/root/Torrents \
-	-v $(TMP)/chrome-sandbox/.chrome:/data \
-	--security-opt seccomp:/etc/docker/seccomp/chrome.json \
 	--device /dev/snd \
 	--device /dev/dri \
 	--device /dev/bus/usb \
@@ -101,21 +88,21 @@ builddocker:
 	/usr/bin/time -v docker build -t `cat TAG` .
 
 kill:
-	-@docker kill `cat paraviewCID`
+	-@docker kill `cat firefoxCID`
 
 rm-image:
-	-@docker rm `cat paraviewCID`
-	-@rm paraviewCID
+	-@docker rm `cat firefoxCID`
+	-@rm firefoxCID
 
 rm: kill rm-image
 
 clean: rm
 
 enter:
-	docker exec -i -t `cat paraviewCID` /bin/bash
+	docker exec -i -t `cat firefoxCID` /bin/bash
 
 logs:
-	docker logs -f `cat paraviewCID`
+	docker logs -f `cat firefoxCID`
 
 # temp stuff
 tempkill:
