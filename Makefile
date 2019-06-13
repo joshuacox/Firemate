@@ -50,6 +50,7 @@ rundocker: TAG NAME HOMEDIR NICENESS LINK
 	-v "${HOME}/Pictures:/root/Pictures" \
 	-v "${HOME}/Torrents:/root/Torrents" \
 	-e "DISPLAY=unix${DISPLAY}" \
+	-e "NICENESS=${NICENESS}" \
 	-e GDK_SCALE \
 	-e GDK_DPI_SCALE \
 	--device /dev/snd \
@@ -71,8 +72,9 @@ tempdocker: TAG NAME
 	--net host \
 	-v /etc/localtime:/etc/localtime:ro \
 	-v /tmp/.X11-unix:/tmp/.X11-unix \
-	-e DISPLAY=unix$(DISPLAY) \
-	-e NICENESS=$(NICENESS) \
+	-e DISPLAY=unix${DISPLAY} \
+	-e NICENESS=${NICENESS} \
+	-e "NICENESS=${NICENESS}" \
 	-v /dev/shm:/dev/shm \
 	-v /etc/hosts:/etc/hosts \
 	--device /dev/snd \

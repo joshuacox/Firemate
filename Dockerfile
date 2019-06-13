@@ -4,6 +4,8 @@ ENV LANG en-US
 ENV NICENESS 19
 ENV LINKS http://foundation.webhosting.coop
 
+#RUN apt-get update
+#RUN apt-cache search java |grep plugin; sleep 10
 RUN apt-get update && apt-get install -y \
 	dirmngr \
 	gnupg \
@@ -19,6 +21,8 @@ RUN apt-get update && apt-get install -y \
 	libgl1-mesa-dri \
 	libgl1-mesa-glx \
 	libpulse0 \
+        openjdk-7-jdk \
+        icedtea-plugin \
         firefox=11.0+build1-0ubuntu4 \
 	--no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
